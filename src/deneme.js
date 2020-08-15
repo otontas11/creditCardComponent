@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Cards from "react-credit-cards";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getCardInfo } from "./redux/actions/checkCard";
+
 import {
   validYear,
   validMonth,
@@ -11,9 +15,12 @@ import {
 
 import { formatCreditCardNumber, formatCVC } from "./utils";
 
-export default function PaymentForm() {
+function PaymentForm(props) {
   const [card, setCard] = useState(initialValues);
   const [newYears, setNewYears] = useState(years);
+  const [cardValidInfo, setCardValidInfo] = useState({});
+  console.log("cardInfoSucces: ", props.cardInfoSucces);
+  // props.cardInfoSucces.map(cart=>console.log("object,card",card))
 
   const handleCallback = ({ issuer, maxLength }) => {
     if (issuer !== undefined) {
@@ -26,8 +33,10 @@ export default function PaymentForm() {
   };
 
   const handleInputChange = ({ target }) => {
+    //console.log("target.value.length 1", target.value.length);
     if (target.name === "number") {
       target.value = formatCreditCardNumber(target.value);
+      props.actions.getCardInfoList(target.value.replace(/\s/g, ""));
     } else if (target.name === "cvc") {
       target.value = formatCVC(target.value);
     } else if (target.name === "cardYear") {
@@ -35,7 +44,6 @@ export default function PaymentForm() {
     } else if (target.name === "cardMonth") {
       setCard({ ...card, cardMonth: target.value });
     }
-
     setCard({ ...card, [target.name]: target.value });
   };
 
@@ -64,7 +72,7 @@ export default function PaymentForm() {
       newYears.indexOf(validYear) === -1 && newYears.unshift(validYear);
     }
   }, [card.cardMonth, card.cardYear]);
- 
+
   return (
     <div key="Payment">
       <div id="PaymentForm">
@@ -97,7 +105,7 @@ export default function PaymentForm() {
               placeholder="Name"
               required
               autoComplete="off"
-              onChange={(e) => handleInputChange(e)}
+              onChange={((e) => handleInputChange(e), props.ca)}
               onFocus={(e) => handleInputFocus(e)}
             />
           </div>
@@ -147,7 +155,7 @@ export default function PaymentForm() {
             </select>
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             {card.issuer &&
             card.issuer !== undefined &&
             card.issuer !== "unknown" ? (
@@ -164,9 +172,72 @@ export default function PaymentForm() {
             ) : (
               <div></div>
             )}
+          </div> */}
+
+          <div className="form-group">
+            {props.cardInfoSucces_type &&
+            props.cardInfoSucces_type === "credit" && (
+              <div className="form-group">
+                <input
+                  type="text"
+                  value={"Credit Card "+card.issuer}
+                  className="form-control"
+                  style={{ border: "initial" }}
+                  placeholder="Kart Tipi"
+                />
+                <InstalllementSummary cartName={card.issuer} />
+              </div>
+            )  }
           </div>
+
+          <div className="form-group">
+            {props.cardInfoSucces_type &&
+            props.cardInfoSucces_type === "debit" ? (
+              <div className="form-group">
+                <input
+                  type="text"
+                  value={"Debit Card "+card.issuer}
+                  className="form-control"
+                  style={{ border: "initial",paddingLeft:'initial' }}
+                  placeholder="Kart Tipi"
+                />
+
+                <select className="custom-select">
+                  <option>Tek Çekim</option>
+                </select>
+              </div>
+            ) : (
+              <div></div>
+            )}
+          </div>
+        
+        
         </form>
       </div>
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    cardInfoSucces_bank: state.checkCard.bank,
+    cardInfoSucces_prepaid: state.checkCard.prepaid,
+    cardInfoSucces_type: state.checkCard.type,
+
+    // prepaid: false
+    // scheme: "visa"
+    // type: "credit"
+
+    cardInfoSucces: state.checkCard,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: {
+      getCardInfoList: bindActionCreators(getCardInfo, dispatch),
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PaymentForm);

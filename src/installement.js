@@ -53,15 +53,8 @@ export const initialValues = {
 export let validYear = new Date().getFullYear();
 export let validMonth = new Date().getMonth()+1;
 export let months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(a=>(  ('0' + a).slice(-2)))
-console.log("validMonth",validMonth)
-  
-// for(var i=validMonth;i<=12;i++)
-// {
-//   months.push(('0'+i).slice(-2))
-// }
  
-
-console.log("months",months)
+ 
 
 export let years = [];
 
