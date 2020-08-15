@@ -2,11 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import Deneme from './deneme';
 import * as serviceWorker from './serviceWorker';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-credit-cards/es/styles-compiled.css';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Deneme />
   </React.StrictMode>,
   document.getElementById('root')
 );
