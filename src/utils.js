@@ -3,6 +3,9 @@ import Payment from "payment";
 function clearNumber(value = "") {
   return value.replace(/\D+/g, "");
 }
+export function checkString(event) {
+  return (event.replace(/[^-_.a-zA-Z0-9\s]+/ig, ''));
+}
 
 export function formatCreditCardNumber(value) {
   if (!value) {

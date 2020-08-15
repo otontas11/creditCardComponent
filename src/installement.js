@@ -41,7 +41,7 @@ export const initialValues = {
   cvc: "",
   expiry: "",
   focus: "",
-  name: "",
+  nameArea: "",
   number: "",
   issuer: "",
   maxLength: "",

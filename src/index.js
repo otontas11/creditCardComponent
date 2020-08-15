@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
-import Deneme from "./deneme";
+
+import App from "./cartComponent";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-credit-cards/es/styles-compiled.css";
@@ -12,7 +12,7 @@ const store = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <Deneme />
+    <App />
   </Provider>,
   document.getElementById("root")
 );
